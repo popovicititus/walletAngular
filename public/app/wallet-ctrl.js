@@ -1,11 +1,26 @@
 angular.module('wallet-app').controller('walletCtrl', function($scope){
     var add = 'Addition';
     var subtract = 'Subtraction';
+    $scope.currencies = [{
+        "name": "GBP",
+        "faSuffix": "gbp",
+        "symbol": "£"
+    }, {
+        "name": "Euro",
+        "faSuffix": "eur",
+        "symbol": "€"
+    }, {
+        "name": "USD",
+        "faSuffix": "usd",
+        "symbol": "$"
+    }
+    ];
 
     $scope.operations = [];
     $scope.budget = 50;
     $scope.amount = "";
     $scope.errorMessage = "";
+    $scope.selectedCurrency = $scope.currencies[0];
 
     $scope.addAmount = function(){
         if(isNotANumber()){

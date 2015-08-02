@@ -1,11 +1,17 @@
 <div class="row">
     <div>
-        <h3>Current budget: {{budget}}</h3>
+        <h3>Current budget: {{budget | currency:""}}<i class="fa fa-{{selectedCurrency.faSuffix}}" style="margin-left:5px"></i></h3>
     </div>
     <div class="col-md-6 col-md-offset-3 col-sm-12">
-        <input ng-model="amount" type="number"/>
-        <button style="margin:0 20px" ng-click="subtractAmount()"><i class="glyphicon glyphicon-minus"></i></button>
-        <button style="margin:0 20px 0 0" ng-click="addAmount()"><i class="glyphicon glyphicon-plus"></i></button>
+        <form name="myForm" novalidate>
+            <div ng-show='errorMessage' style="margin-bottom:20px">{{errorMessage}}</div>
+            <div style="margin-bottom:20px">
+                <input ng-model="amount" type="number"/>
+                <button style="margin:0 20px" ng-click="subtractAmount()"><i class="glyphicon glyphicon-minus"></i></button>
+                <button style="margin:0 20px 0 0" ng-click="addAmount()"><i class="glyphicon glyphicon-plus"></i></button>
+                <select ng-model="selectedCurrency" ng-options="curr.name for curr in currencies" class="pull-right"></select>
+            </div>
+        </form>
     </div>
 </div>
 <div class="row">
@@ -36,7 +42,7 @@
                     {{ $index + 1 }}
                 </td>
                 <td>
-                    {{ operation.amount | currency:$ }}
+                    {{ operation.amount | currency:selectedCurrency.symbol }}
                 </td>
                 <td>
                     {{ operation.date | date:"dd/mm/yyyy - HH:mm:ss"}}
@@ -45,7 +51,7 @@
                     {{ operation.type}}
                 </td>
                 <td>
-                    {{ operation.remainingBudget | currency:$}}
+                    {{ operation.remainingBudget | currency:selectedCurrency.symbol}}
                 </td>
             </tr>
             </tbody>
