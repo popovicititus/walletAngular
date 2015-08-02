@@ -36,16 +36,16 @@
                 date: new Date()
             })
         }
-    })
+    });
 
-    .config(function($routeProvider) {
+    app.config(function($routeProvider) {
         $routeProvider.
-            when('/wallet', {
+            when('/', {
                 controller: 'walletCtrl',
                 templateUrl: '/app/views/wallet.html'
             }).
             otherwise({
-                redirectTo: '/wallet'
+                redirectTo: '/'
             });
     });
 })();
