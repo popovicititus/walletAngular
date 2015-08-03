@@ -1,15 +1,13 @@
 <div class="row">
-    <div>
-        <h3>Current budget: {{budget | currency:""}}<i class="fa fa-{{selectedCurrency.faSuffix}}" style="margin-left:5px"></i></h3>
-    </div>
     <div class="col-md-6 col-md-offset-3 col-sm-12">
+        <h3>Current budget: {{budget | currency:""}}<i class="fa fa-{{selectedCurrency.faSuffix}}" style="margin-left:5px"></i></h3>
         <form name="myForm" novalidate>
-            <div ng-show='errorMessage' style="margin-bottom:20px">{{errorMessage}}</div>
+            <div style="margin-bottom:20px; min-height:30px"><p ng-show='errorMessage' >{{errorMessage}}</p></div>
             <div style="margin-bottom:20px">
                 <input ng-model="amount" type="number"/>
-                <button style="margin:0 20px" ng-click="subtractAmount()"><i class="glyphicon glyphicon-minus"></i></button>
-                <button style="margin:0 20px 0 0" ng-click="addAmount()"><i class="glyphicon glyphicon-plus"></i></button>
-                <select ng-model="selectedCurrency" ng-options="curr.name for curr in currencies" class="pull-right"></select>
+                <button style="margin:0 20px 0 0" ng-click="doAction()">Apply</button>
+                <select ng-model="selectedAction" ng-options="action.uiName for action in actions"></select>
+                <select ng-model="selectedCurrency" ng-options="curr.name for curr in currencies""></select>
             </div>
         </form>
     </div>
