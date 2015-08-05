@@ -5,9 +5,9 @@ angular.module('wallet-app').directive('menuBar', [
             restrict: 'E',
             replace: true,
             templateUrl: '/app/views/menu-bar.html',
-            link: function( scope, element, attribute ) {
+            link: function( scope ) {
                 scope.reset = function() {
-                    $rootScope.$broadcast( 'reset' );
+                    $rootScope.$broadcast('reset');
                     return false;
                 };
             }

@@ -1,52 +1,51 @@
 angular.module('wallet-app').controller('walletCtrl', function($scope, $localStorage){
-    $scope.amount = "";
-    $scope.errorMessage = "";
-    $scope.actions = [
-        {
-            uiName: 'Add',
-            callback: addAmount
-        },
-        {
-            uiName: 'Subtract',
-            callback: subtractAmount
-        }
-    ];
-    $scope.selectedAction = $scope.actions[0];
-    $scope.operations = $localStorage.operations || [];
-    $scope.budget = $localStorage.budget || 0;
+    $scope.vm = {
+        amount : 0,
+        errorMessage : "",
+        actions : [
+            {
+                uiName: 'Add',
+                callback: addAmount
+            },
+            {
+                uiName: 'Subtract',
+                callback: subtractAmount
+            }
+        ],
+        operations : $localStorage.operations || [],
+        budget : $localStorage.budget || 0
+    };
+    $scope.vm.selectedAction = $scope.vm.actions[0];
     initCurrency();
 
-    $scope.doAction = function(){
-        $scope.selectedAction.callback();
-    };
-
     $scope.$on('reset', function() {
-        $scope.operations = [];
-        $scope.budget = 0;
-        $scope.selectedCurrency = $scope.currencies[0];
-        $scope.selectedAction = $scope.actions[0];
+        $scope.vm.operations = [];
+        $scope.vm.budget = 0;
+        $scope.vm.amount = 0;
+        $scope.vm.selectedCurrency = $scope.vm.currencies[0];
+        $scope.vm.selectedAction = $scope.vm.actions[0];
         delete $localStorage.operations;
         delete $localStorage.budget;
         delete $localStorage.selectedCurrency;
     });
 
-    //automatically remove ui errors and reset the input after each successful operation
-    $scope.$watch('budget', function(newVal, oldVal){
-        if(newVal && (oldVal != newVal)){
+    //automatically remove error messages and reset the input after each successful operation
+    $scope.$watch('vm.budget', function(newVal, oldVal){
+        if(oldVal != newVal){
             addToOperations(newVal - oldVal > 0 ? 'Addition' : 'Subtraction');
-            $scope.amount = "";
-            $scope.errorMessage = "";
+            $scope.vm.amount = 0;
+            $scope.vm.errorMessage = "";
         }
     });
 
-    $scope.$watch('selectedCurrency', function(newVal, oldVal){
+    $scope.$watch('vm.selectedCurrency', function(newVal, oldVal){
         if(oldVal != newVal){
             $localStorage.selectedCurrency = newVal;
         }
     });
 
     function initCurrency(){
-        $scope.currencies = [{
+        $scope.vm.currencies = [{
             "name": "GBP",
             "faSuffix": "gbp",
             "symbol": "£"
@@ -62,54 +61,53 @@ angular.module('wallet-app').controller('walletCtrl', function($scope, $localSto
 
         if($localStorage.selectedCurrency){
             //in case a currency is not supported no more, check that the value in local storage is still in the array of supported currencies
-            for (var i=0, iLen=$scope.currencies.length; i<iLen; i++) {
-                if ($scope.currencies[i].name == $localStorage.selectedCurrency.name) {$scope.selectedCurrency = $scope.currencies[i]; break}
+            for (var i=0, iLen=$scope.vm.currencies.length; i<iLen; i++) {
+                if ($scope.vm.currencies[i].name == $localStorage.selectedCurrency.name) {$scope.vm.selectedCurrency = $scope.vm.currencies[i]; break}
             }
         }
-        $scope.selectedCurrency = $scope.selectedCurrency || $scope.currencies[0];
+        $scope.vm.selectedCurrency = $scope.vm.selectedCurrency || $scope.vm.currencies[0];
     }
 
     function addAmount(){
         if(isNotANumber()){
             return false;
         }
-        $scope.budget += $scope.amount;
-        $localStorage.budget = $scope.budget;
+        $scope.vm.budget += $scope.vm.amount;
+        $localStorage.budget = $scope.vm.budget;
     }
 
     function subtractAmount(){
         if(isNotANumber() || isNegativeBudget()){
             return false;
         }
-        $scope.budget -= $scope.amount;
-        $localStorage.budget = $scope.budget;
+        $scope.vm.budget -= $scope.vm.amount;
+        $localStorage.budget = $scope.vm.budget;
     }
 
     function addToOperations(type){
-        $scope.operations.push({
-            amount: $scope.amount,
-            remainingBudget: $scope.budget,
+        $scope.vm.operations.push({
+            amount: $scope.vm.amount,
+            remainingBudget: $scope.vm.budget,
             type: type,
             date: new Date()
         });
-        $localStorage.operations = $scope.operations;
+        $localStorage.operations = $scope.vm.operations;
     }
 
     //validation functions
     var isNotANumber = function() {
-        if (isNaN($scope.amount) || $scope.amount <= 0) {
-            $scope.errorMessage = "Please insert a valid amount";
+        if (isNaN($scope.vm.amount) || $scope.vm.amount <= 0) {
+            $scope.vm.errorMessage = "Please insert a valid amount";
             return true;
         }
         return false;
     };
 
     var isNegativeBudget = function() {
-        if ($scope.budget - $scope.amount < 0) {
-            $scope.errorMessage = "The remaining budget cannot be negative";
+        if ($scope.vm.budget - $scope.vm.amount < 0) {
+            $scope.vm.errorMessage = "The remaining budget cannot be negative";
             return true;
         }
         return false;
     };
-
-})
+});

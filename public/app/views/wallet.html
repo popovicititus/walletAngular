@@ -1,13 +1,13 @@
 <div class="row">
     <div class="col-md-6 col-md-offset-3 col-sm-12">
-        <h3>Current budget: {{budget | currency:""}}<i class="fa fa-{{selectedCurrency.faSuffix}}" style="margin-left:5px"></i></h3>
+        <h3>Current budget: {{vm.budget | currency:""}}<i class="fa fa-{{vm.selectedCurrency.faSuffix}}" style="margin-left:5px"></i></h3>
         <form name="myForm" novalidate>
-            <div style="margin-bottom:20px; min-height:30px"><p ng-show='errorMessage' >{{errorMessage}}</p></div>
+            <div style="margin-bottom:20px; min-height:30px"><p ng-show='vm.errorMessage' >{{vm.errorMessage}}</p></div>
             <div style="margin-bottom:20px">
-                <input ng-model="amount" type="number"/>
-                <button style="margin:0 20px 0 0" ng-click="doAction()">Apply</button>
-                <select ng-model="selectedAction" ng-options="action.uiName for action in actions"></select>
-                <select ng-model="selectedCurrency" ng-options="curr.name for curr in currencies""></select>
+                <input ng-model="vm.amount" type="number" focused-input=""/>
+                <button style="margin:0 20px 0 0" ng-click="vm.selectedAction.callback()">Apply</button>
+                <select ng-model="vm.selectedAction" ng-options="action.uiName for action in vm.actions"></select>
+                <select ng-model="vm.selectedCurrency" ng-options="curr.name for curr in vm.currencies"></select>
             </div>
         </form>
     </div>
@@ -35,12 +35,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="operation in operations">
+            <tr ng-repeat="operation in vm.operations">
                 <td>
                     {{ $index + 1 }}
                 </td>
                 <td>
-                    {{ operation.amount | currency:selectedCurrency.symbol }}
+                    {{ operation.amount | currency:vm.selectedCurrency.symbol }}
                 </td>
                 <td>
                     {{ operation.date | date:"dd/mm/yyyy - HH:mm:ss"}}
@@ -49,7 +49,7 @@
                     {{ operation.type}}
                 </td>
                 <td>
-                    {{ operation.remainingBudget | currency:selectedCurrency.symbol}}
+                    {{ operation.remainingBudget | currency:vm.selectedCurrency.symbol}}
                 </td>
             </tr>
             </tbody>
